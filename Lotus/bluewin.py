@@ -40,8 +40,8 @@ def decrypter():
 
 root = Tk()
 pygame.init()
-pygame.mixer.init()
-pygame.mixer.music.load('WormHole.ogg')
+#pygame.mixer.init()
+#pygame.mixer.music.load('WormHole.ogg')
 frameCnt = 49
 frames = [PhotoImage(file='/Lotus/x3.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
 
@@ -59,7 +59,7 @@ button = Button(root, text="UNLOCK LINK", padx=10,pady=10,fg="red",bg="black")
 button.place(x=370,y=450)
 
 update(0)
-pygame.mixer.music.play()
+#pygame.mixer.music.play()
 pygame.event.wait()
 
 root.mainloop()
