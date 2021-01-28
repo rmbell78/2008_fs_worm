@@ -3,7 +3,7 @@ from tkinter import *
 import tkinter.messagebox
 import os
 import subprocess
-import pygame
+# import pygame
 
 
 
@@ -35,11 +35,12 @@ def decrypter():
 
     else:
         tkinter.messagebox.showinfo("Warning!!!", "File Not Decrypted")
-
+def internet():
+    subprocess.run(['xdg-open http://10.0.2.10:8080'], shell=True)
 
 
 root = Tk()
-pygame.init()
+# pygame.init()
 #pygame.mixer.init()
 #pygame.mixer.music.load('WormHole.ogg')
 frameCnt = 49
@@ -55,11 +56,11 @@ entry.place(x=325,y=410,height=30)
 button = Button(root, text="VALIDATE CODE", padx=10,pady=10,fg="red",bg="black", command=decrypter)
 button.place(x=505,y=450)
 
-button = Button(root, text="UNLOCK LINK", padx=10,pady=10,fg="red",bg="black")
+button = Button(root, text="UNLOCK LINK", padx=10,pady=10,fg="red",bg="black",command=internet)
 button.place(x=370,y=450)
 
 update(0)
 #pygame.mixer.music.play()
-pygame.event.wait()
+# pygame.event.wait()
 
 root.mainloop()
